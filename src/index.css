@@ -12,6 +12,21 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* RESET BÁSICO */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ALTURA TOTAL PARA ELECTRON */
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+
 
 a {
   font-weight: 500;

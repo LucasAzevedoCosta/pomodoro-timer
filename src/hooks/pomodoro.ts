@@ -1,146 +1,114 @@
-export type TimerMode = 'pomodoro' | 'short-break' | 'long-break';
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export interface TimerState {
-  mode: TimerMode;
-  timeLeft: number;
-  isRunning: boolean;
-  sessionCount: number;
-  intervalId: number | null;
+export interface PomodoroSettings {
+  focusDuration: number;
+  shortBreakDuration: number;
+  longBreakDuration: number;
+  cyclesBeforeLongBreak: number;
 }
 
-export const TIMER_DURATIONS: Record<TimerMode, number> = {
-  'pomodoro': 25 * 60,
-  'short-break': 5 * 60,
-  'long-break': 15 * 60,
+export type TimerMode = "focus" | "shortBreak" | "longBreak";
+
+const DEFAULT_SETTINGS: PomodoroSettings = {
+  focusDuration: 25,
+  shortBreakDuration: 5,
+  longBreakDuration: 15,
+  cyclesBeforeLongBreak: 4,
 };
 
-export const COLORS: Record<TimerMode, string> = {
-  'pomodoro': '#e74c3c',
-  'short-break': '#3498db',
-  'long-break': '#2ecc71',
-};
+export function usePomodoro() {
+  const [settings, setSettings] = useState<PomodoroSettings>(DEFAULT_SETTINGS);
+  const [mode, setMode] = useState<TimerMode>("focus");
+  const [timeLeft, setTimeLeft] = useState(settings.focusDuration * 60);
+  const [isRunning, setIsRunning] = useState(false);
+  const [cycleCount, setCycleCount] = useState(0);
 
-export const state: TimerState = {
-  mode: 'pomodoro',
-  timeLeft: TIMER_DURATIONS['pomodoro'],
-  isRunning: false,
-  sessionCount: 1,
-  intervalId: null,
-};
+  const intervalRef = useRef<number | null>(null);
 
-let initialized = false;
-
-export function setupPomodoro() {
-  if (initialized) return;
-  initialized = true;
-
-  const timerDisplay = document.getElementById('timer')!;
-  const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
-  const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement;
-  const modeBtns = document.querySelectorAll('.mode-btn');
-  const sessionCountDisplay = document.getElementById('session-count')!;
-
-  function updateDisplay() {
-    const minutes = Math.floor(state.timeLeft / 60);
-    const seconds = state.timeLeft % 60;
-    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    sessionCountDisplay.textContent = state.sessionCount.toString();
-
-    startBtn.textContent = state.isRunning ? 'Pause' : 'Start';
-  }
-
-  function switchMode(mode: TimerMode) {
-    if (state.isRunning) {
-      stopTimer();
-    }
-
-    state.mode = mode;
-    state.timeLeft = TIMER_DURATIONS[mode];
-
-    modeBtns.forEach(btn => {
-      btn.classList.remove('active');
-      if (btn.getAttribute('data-mode') === mode) {
-        btn.classList.add('active');
+  const getDurationByMode = useCallback(
+    (m: TimerMode, s = settings) => {
+      switch (m) {
+        case "focus":
+          return s.focusDuration;
+        case "shortBreak":
+          return s.shortBreakDuration;
+        case "longBreak":
+          return s.longBreakDuration;
       }
-    });
+    },
+    [settings]
+  );
 
-    document.documentElement.style.setProperty('--accent-active', COLORS[mode]);
-    updateDisplay();
-  }
+  const switchMode = useCallback(
+    (newMode: TimerMode) => {
+      setMode(newMode);
+      setIsRunning(false);
+      setTimeLeft(getDurationByMode(newMode) * 60);
+    },
+    [getDurationByMode]
+  );
 
-  function startTimer() {
-    state.isRunning = true;
-    startBtn.textContent = 'Pause';
+  const start = () => setIsRunning(true);
+  const pause = () => setIsRunning(false);
 
-    state.intervalId = window.setInterval(() => {
-      if (state.timeLeft > 0) {
-        state.timeLeft--;
-        updateDisplay();
+  const reset = () => {
+    setIsRunning(false);
+    setTimeLeft(getDurationByMode(mode) * 60);
+  };
+
+  const handleTimerComplete = useCallback(() => {
+    if (mode === "focus") {
+      const newCycle = cycleCount + 1;
+      setCycleCount(newCycle);
+
+      if (newCycle % settings.cyclesBeforeLongBreak === 0) {
+        switchMode("longBreak");
       } else {
-        stopTimer();
-        playNotificationSound();
-
-        if (state.mode === 'pomodoro') {
-          state.sessionCount++;
-          const nextMode = state.sessionCount % 4 === 0 ? 'long-break' : 'short-break';
-          switchMode(nextMode);
-        } else {
-          switchMode('pomodoro');
-        }
+        switchMode("shortBreak");
       }
-    }, 1000);
-  }
-
-  function stopTimer() {
-    state.isRunning = false;
-    if (state.intervalId !== null) {
-      clearInterval(state.intervalId);
-      state.intervalId = null;
-    }
-    startBtn.textContent = 'Start';
-  }
-
-  function toggleTimer() {
-    if (state.isRunning) {
-      stopTimer();
     } else {
-      startTimer();
+      switchMode("focus");
     }
-  }
+  }, [mode, cycleCount, settings.cyclesBeforeLongBreak, switchMode]);
 
-  function resetTimer() {
-    stopTimer();
-    state.timeLeft = TIMER_DURATIONS[state.mode];
-    updateDisplay();
-  }
+  const updateSettings = (newSettings: PomodoroSettings) => {
+    setSettings(newSettings);
+    setIsRunning(false);
+    setTimeLeft(getDurationByMode(mode, newSettings) * 60);
+  };
 
-  function playNotificationSound() {
-    const audioContext = new AudioContext();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+  useEffect(() => {
+    if (!isRunning) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
 
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    intervalRef.current = window.setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          setIsRunning(false);
+          handleTimerComplete();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
-    oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isRunning, handleTimerComplete]);
 
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
-  }
-
-  startBtn.addEventListener('click', toggleTimer);
-  resetBtn.addEventListener('click', resetTimer);
-
-  modeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const mode = btn.getAttribute('data-mode') as TimerMode;
-      switchMode(mode);
-    });
-  });
-
-  updateDisplay();
+  return {
+    settings,
+    mode,
+    timeLeft,
+    isRunning,
+    cycleCount,
+    start,
+    pause,
+    reset,
+    switchMode,
+    updateSettings,
+  };
 }

@@ -1,0 +1,83 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #111827, #1f2937);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 16px;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.timer {
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.focus {
+  background-color: #ef4444;
+}
+
+.shortBreak {
+  background-color: #22c55e;
+}
+
+.longBreak {
+  background-color: #3b82f6;
+}
+
+.time {
+  font-size: 72px;
+  font-weight: bold;
+  margin: 16px 0;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.modes {
+  display: flex;
+  gap: 8px;
+}
+
+.modeButton {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.active {
+  opacity: 1;
+}
