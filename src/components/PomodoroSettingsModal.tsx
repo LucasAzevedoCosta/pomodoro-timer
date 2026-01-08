@@ -1,12 +1,8 @@
 import { useState } from "react";
-import { PomodoroSettings } from "../hooks/pomodoro";
 import styles from "./PomodoroSettingsModal.module.css";
+import { PomodoroSettings, Props } from "../types";
 
-interface Props {
-  settings: PomodoroSettings;
-  onSave: (settings: PomodoroSettings) => void;
-  onCancel: () => void;
-}
+
 
 export function PomodoroSettingsModal({ settings, onSave, onCancel }: Props) {
   const [tempSettings, setTempSettings] = useState(settings);

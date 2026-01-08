@@ -1,13 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { PomodoroSettings, TimerMode } from "../types";
 
-export interface PomodoroSettings {
-  focusDuration: number;
-  shortBreakDuration: number;
-  longBreakDuration: number;
-  cyclesBeforeLongBreak: number;
-}
-
-export type TimerMode = "focus" | "shortBreak" | "longBreak";
 
 const DEFAULT_SETTINGS: PomodoroSettings = {
   focusDuration: 25,
