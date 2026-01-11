@@ -37,3 +37,13 @@ export interface SettingsScreenProps {
   };
   onSettingsChange: (settings: any) => void;
 }
+export interface PomodoroTimerProps {
+  theme: Theme;
+  settings: {
+    focusTime: number;
+    shortBreakTime: number;
+    longBreakTime: number;
+    soundEnabled: boolean;
+    notificationsEnabled: boolean;
+  };
+}
