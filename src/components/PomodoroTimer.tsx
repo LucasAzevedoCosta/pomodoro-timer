@@ -1,94 +1,71 @@
-import { useState } from "react";
-import { Play, Pause, RotateCcw, Settings } from "lucide-react";
-import { usePomodoro } from "../hooks/pomodoro";
-import { PomodoroSettingsModal } from "./PomodoroSettingsModal";
-import styles from "./PomodoroTimer.module.css";
+import { useEffect, useRef, useState } from "react";
+import "./styles/clock.css";
+import ClockShell from "./ClockShell";
+import { Theme } from "./ThemeSelector";
+import { TIMER_DURATIONS, TimerMode } from "../types";
+import ThemeOverlay from "./ThemeOverlay";
 
-export function PomodoroTimer() {
-  const pomodoro = usePomodoro();
-  const [showSettings, setShowSettings] = useState(false);
+interface TimerProps {
+  theme: Theme;
+}
 
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+const PomodoroTimer = ({ theme }: TimerProps) => {
+  const [mode, setMode] = useState<TimerMode>("pomodoro");
+  const [timeLeft, setTimeLeft] = useState(TIMER_DURATIONS.pomodoro);
+  const [isRunning, setIsRunning] = useState(false);
+  const [completedPomodoros, setCompletedPomodoros] = useState(0);
+  const intervalRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (isRunning && timeLeft > 0) {
+      intervalRef.current = window.setInterval(
+        () => setTimeLeft((t) => t - 1),
+        1000
+      );
+    } else if (timeLeft === 0) {
+      handleComplete();
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isRunning, timeLeft]);
+
+  const handleComplete = () => {
+    setIsRunning(false);
+    if (mode === "pomodoro") {
+      setCompletedPomodoros((p) => p + 1);
+    }
   };
 
-  const modeClass = styles[pomodoro.mode];
-
-  if (showSettings) {
-    return (
-      <PomodoroSettingsModal
-        settings={pomodoro.settings}
-        onSave={(s) => {
-          pomodoro.updateSettings(s);
-          setShowSettings(false);
-        }}
-        onCancel={() => setShowSettings(false)}
-      />
-    );
-  }
+  const progress =
+    ((TIMER_DURATIONS[mode] - timeLeft) / TIMER_DURATIONS[mode]) * 100;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <div className={styles.header}>
-          <h1>Pomodoro</h1>
-          <button onClick={() => setShowSettings(true)}>
-            <Settings />
-          </button>
-        </div>
+    <div className={`pomodoro-container theme-${theme}`}>
+      <ClockShell
+        mode={mode}
+        timeLeft={timeLeft}
+        progress={progress}
+        isRunning={isRunning}
+        completedPomodoros={completedPomodoros}
+        onToggle={() => setIsRunning((r) => !r)}
+        onReset={() => {
+          setIsRunning(false);
+          setTimeLeft(TIMER_DURATIONS[mode]);
+        }}
+        onSwitchMode={(m) => {
+          setMode(m);
+          setTimeLeft(TIMER_DURATIONS[m]);
+          setIsRunning(false);
+        }}
+      />
 
-        <div className={`${styles.timer} ${modeClass}`}>
-          <p>{pomodoro.mode}</p>
-          <div className={styles.time}>{formatTime(pomodoro.timeLeft)}</div>
-          <p>Ciclo {pomodoro.cycleCount + 1}</p>
+      <ThemeOverlay theme={theme} />
 
-          <div className={styles.controls}>
-            <button
-              className={styles.button}
-              onClick={pomodoro.isRunning ? pomodoro.pause : pomodoro.start}
-            >
-              {pomodoro.isRunning ? <Pause /> : <Play />}
-              {pomodoro.isRunning ? "Pausar" : "Iniciar"}
-            </button>
-
-            <button className={styles.button} onClick={pomodoro.reset}>
-              <RotateCcw />
-              Resetar
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.modes}>
-          <button
-            className={`${styles.modeButton} ${
-              pomodoro.mode === "focus" ? styles.active : ""
-            }`}
-            onClick={() => pomodoro.switchMode("focus")}
-          >
-            Foco
-          </button>
-
-          <button
-            className={`${styles.modeButton} ${
-              pomodoro.mode === "shortBreak" ? styles.active : ""
-            }`}
-            onClick={() => pomodoro.switchMode("shortBreak")}
-          >
-            Pausa Curta
-          </button>
-
-          <button
-            className={`${styles.modeButton} ${
-              pomodoro.mode === "longBreak" ? styles.active : ""
-            }`}
-            onClick={() => pomodoro.switchMode("longBreak")}
-          >
-            Pausa Longa
-          </button>
-        </div>
-      </div>
+      {isRunning && <div className="pulse-effect" />}
     </div>
   );
-}
+};
+
+export default PomodoroTimer;
