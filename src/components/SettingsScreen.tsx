@@ -11,11 +11,34 @@ export const SettingsScreen = ({
     key: "focusTime" | "shortBreakTime" | "longBreakTime",
     value: number
   ) => {
+// Descomentar para testes no timer
+//  const clampedValue = Math.max(0.1, Math.min(60, value));
     const clampedValue = Math.max(5, Math.min(60, value));
     onSettingsChange({
       ...settings,
       [key]: clampedValue,
     });
+  };
+  const handleLongBreakChange = (increase: boolean) => {
+    if (increase) {
+      onSettingsChange({
+        ...settings,
+        longBreakTime: settings.longBreakTime + TIME_STEP,
+        longBreakEnabled: true,
+      });
+    } else {
+      if (settings.longBreakTime <= 5) {
+        onSettingsChange({
+          ...settings,
+          longBreakEnabled: false,
+        });
+      } else {
+        onSettingsChange({
+          ...settings,
+          longBreakTime: Math.max(5, settings.longBreakTime - TIME_STEP),
+        });
+      }
+    }
   };
 
   const toggleSetting = (key: ToggleSettingKey | "longBreakEnabled") => {
@@ -104,24 +127,21 @@ export const SettingsScreen = ({
             <div className="item-controls">
               <button
                 className="arrow-btn"
-                onClick={() =>
-                  handleTimeChange(
-                    "longBreakTime",
-                    Math.max(0, settings.longBreakTime - TIME_STEP)
-                  )
+                onClick={() => handleLongBreakChange(false)}
+                disabled={
+                  !settings.longBreakEnabled && settings.longBreakTime <= 5
                 }
               >
                 ‹
               </button>
-              <span className="item-value">{settings.longBreakTime} min</span>
+              <span className="item-value">
+                {settings.longBreakEnabled
+                  ? `${settings.longBreakTime} min`
+                  : "Disabled"}
+              </span>
               <button
                 className="arrow-btn"
-                onClick={() =>
-                  handleTimeChange(
-                    "longBreakTime",
-                    settings.longBreakTime + TIME_STEP
-                  )
-                }
+                onClick={() => handleLongBreakChange(true)}
               >
                 ›
               </button>
@@ -129,7 +149,7 @@ export const SettingsScreen = ({
           </div>
 
           <div className="settings-item">
-            <label className="item-label">Cycles Before Long Break</label>
+            <label className="item-label">Focus Count</label>
             <div className="item-controls">
               <button
                 className="arrow-btn"

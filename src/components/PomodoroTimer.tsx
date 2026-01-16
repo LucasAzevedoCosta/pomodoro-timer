@@ -132,9 +132,21 @@ export const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
           <button className="control-btn play-btn" onClick={toggleTimer}>
             {isRunning ? <Pause size={32} /> : <Play size={32} />}
           </button>
-          <div className="pomodoro-count">
-            <span className="count-label">Pomodoros</span>
-            <span className="count-value">{completedPomodoros}</span>
+          <div className="pomodoro-bubbles">
+            {Array.from({ length: settings.cyclesBeforeLongBreak }).map(
+              (_, index) => {
+                const isCompleted =
+                  index < completedPomodoros % settings.cyclesBeforeLongBreak;
+                return (
+                  <div
+                    key={index}
+                    className={`bubble ${isCompleted ? "completed" : ""}`}
+                  >
+                    {isCompleted && <span className="checkmark">✓</span>}
+                  </div>
+                );
+              }
+            )}
           </div>
         </div>
 
