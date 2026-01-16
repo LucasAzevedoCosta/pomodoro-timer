@@ -1,60 +1,26 @@
 import "./styles/clock.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Play, Pause, RotateCcw } from "lucide-react";
+import { PomodoroTimerProps, TimerMode, PomodoroSettings } from "../types";
 
-type TimerMode = "pomodoro" | "shortBreak" | "longBreak";
-type Theme = "mountains" | "forest" | "neon" | "minimal";
-
-interface PomodoroTimerProps {
-  theme: Theme;
-  settings: {
-    focusTime: number;
-    shortBreakTime: number;
-    longBreakTime: number;
-    soundEnabled: boolean;
-    notificationsEnabled: boolean;
-  };
-}
-
-const getTimerDurations = (settings: any) => ({
+const getTimerDurations = (
+  settings: PomodoroSettings
+): Record<TimerMode, number> => ({
   pomodoro: settings.focusTime * 60,
   shortBreak: settings.shortBreakTime * 60,
-  longBreak: settings.longBreakTime * 60,
+  longBreak: settings.longBreakEnabled ? settings.longBreakTime * 60 : 0,
 });
 
-const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
+export const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
   const TIMER_DURATIONS = getTimerDurations(settings);
+
   const [mode, setMode] = useState<TimerMode>("pomodoro");
   const [timeLeft, setTimeLeft] = useState(TIMER_DURATIONS.pomodoro);
   const [isRunning, setIsRunning] = useState(false);
   const [completedPomodoros, setCompletedPomodoros] = useState(0);
   const intervalRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    if (isRunning && timeLeft > 0) {
-      intervalRef.current = window.setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      handleTimerComplete();
-    }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isRunning, timeLeft]);
-
-  const handleTimerComplete = () => {
-    setIsRunning(false);
-    if (mode === "pomodoro") {
-      setCompletedPomodoros((prev) => prev + 1);
-    }
-    playSound();
-  };
-
-  const playSound = () => {
+  const playSound = useCallback(() => {
     if (!settings.soundEnabled) return;
 
     const audioContext = new AudioContext();
@@ -75,29 +41,58 @@ const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
 
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.5);
-  };
+  }, [settings.soundEnabled]);
 
-  const toggleTimer = () => {
-    setIsRunning(!isRunning);
-  };
+  const handleTimerComplete = useCallback(() => {
+    setIsRunning(false);
+
+    if (mode === "pomodoro") {
+      const nextPomodoroCount = completedPomodoros + 1;
+      setCompletedPomodoros(nextPomodoroCount);
+
+      let nextMode: TimerMode = "shortBreak";
+      if (
+        settings.longBreakEnabled &&
+        nextPomodoroCount % settings.cyclesBeforeLongBreak === 0
+      ) {
+        nextMode = "longBreak";
+      }
+
+      setMode(nextMode);
+      setTimeLeft(TIMER_DURATIONS[nextMode]);
+    } else {
+      setMode("pomodoro");
+      setTimeLeft(TIMER_DURATIONS.pomodoro);
+    }
+
+    playSound();
+  }, [mode, completedPomodoros, settings, TIMER_DURATIONS, playSound]);
+
+  useEffect(() => {
+    if (isRunning && timeLeft > 0) {
+      intervalRef.current = window.setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      handleTimerComplete();
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isRunning, timeLeft, handleTimerComplete]);
+
+  const toggleTimer = () => setIsRunning((prev) => !prev);
 
   const resetTimer = () => {
     setIsRunning(false);
     setTimeLeft(TIMER_DURATIONS[mode]);
   };
 
-  const switchMode = (newMode: TimerMode) => {
-    setMode(newMode);
-    setTimeLeft(TIMER_DURATIONS[newMode]);
-    setIsRunning(false);
-  };
-
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs
-      .toString()
-      .padStart(2, "0")}`;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
 
   const progress =
@@ -106,27 +101,6 @@ const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
   return (
     <div className={`pomodoro-container theme-${theme}`}>
       <div className="timer-card">
-        <div className="mode-selector">
-          <button
-            className={`mode-btn ${mode === "pomodoro" ? "active" : ""}`}
-            onClick={() => switchMode("pomodoro")}
-          >
-            Pomodoro
-          </button>
-          <button
-            className={`mode-btn ${mode === "shortBreak" ? "active" : ""}`}
-            onClick={() => switchMode("shortBreak")}
-          >
-            Short Break
-          </button>
-          <button
-            className={`mode-btn ${mode === "longBreak" ? "active" : ""}`}
-            onClick={() => switchMode("longBreak")}
-          >
-            Long Break
-          </button>
-        </div>
-
         <div className="timer-display">
           <svg className="progress-ring" viewBox="0 0 300 300">
             <circle className="progress-ring-bg" cx="150" cy="150" r="140" />
@@ -135,16 +109,18 @@ const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
               cx="150"
               cy="150"
               r="140"
-              style={{
-                strokeDashoffset: 880 - (880 * progress) / 100,
-              }}
+              style={{ strokeDashoffset: 880 - (880 * progress) / 100 }}
             />
           </svg>
 
           <div className="timer-content">
             <div className="timer-text">{formatTime(timeLeft)}</div>
             <div className="timer-label">
-              {mode === "pomodoro" ? "Focus Time" : "Break Time"}
+              {mode === "pomodoro"
+                ? "Focus Time"
+                : mode === "shortBreak"
+                ? "Short Break"
+                : "Long Break"}
             </div>
           </div>
         </div>
@@ -171,5 +147,3 @@ const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
     </div>
   );
 };
-
-export default PomodoroTimer;

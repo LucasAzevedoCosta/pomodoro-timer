@@ -1,20 +1,36 @@
 import { ChevronLeft } from "lucide-react";
 import "./styles/SettingsScreen.css";
-import { SettingsScreenProps } from "../types";
+import { SettingsScreenProps, TIME_STEP, ToggleSettingKey } from "../types";
 
-const SettingsScreen = ({
+export const SettingsScreen = ({
   onBack,
   settings,
   onSettingsChange,
 }: SettingsScreenProps) => {
-  const handleTimeChange = (key: string, value: number) => {
-    if (value >= 1 && value <= 60) {
-      onSettingsChange({ ...settings, [key]: value });
-    }
+  const handleTimeChange = (
+    key: "focusTime" | "shortBreakTime" | "longBreakTime",
+    value: number
+  ) => {
+    const clampedValue = Math.max(5, Math.min(60, value));
+    onSettingsChange({
+      ...settings,
+      [key]: clampedValue,
+    });
   };
 
-  const toggleSetting = (key: string) => {
-    onSettingsChange({ ...settings, [key]: !settings[key] });
+  const toggleSetting = (key: ToggleSettingKey | "longBreakEnabled") => {
+    onSettingsChange({
+      ...settings,
+      [key]: !settings[key],
+    });
+  };
+
+  const handleCyclesChange = (value: number) => {
+    const clampedValue = Math.max(1, Math.min(10, value));
+    onSettingsChange({
+      ...settings,
+      cyclesBeforeLongBreak: clampedValue,
+    });
   };
 
   return (
@@ -37,7 +53,7 @@ const SettingsScreen = ({
               <button
                 className="arrow-btn"
                 onClick={() =>
-                  handleTimeChange("focusTime", settings.focusTime - 1)
+                  handleTimeChange("focusTime", settings.focusTime - TIME_STEP)
                 }
               >
                 ‹
@@ -46,7 +62,7 @@ const SettingsScreen = ({
               <button
                 className="arrow-btn"
                 onClick={() =>
-                  handleTimeChange("focusTime", settings.focusTime + 1)
+                  handleTimeChange("focusTime", settings.focusTime + TIME_STEP)
                 }
               >
                 ›
@@ -62,7 +78,7 @@ const SettingsScreen = ({
                 onClick={() =>
                   handleTimeChange(
                     "shortBreakTime",
-                    settings.shortBreakTime - 1
+                    settings.shortBreakTime - TIME_STEP
                   )
                 }
               >
@@ -74,7 +90,7 @@ const SettingsScreen = ({
                 onClick={() =>
                   handleTimeChange(
                     "shortBreakTime",
-                    settings.shortBreakTime + 1
+                    settings.shortBreakTime + TIME_STEP
                   )
                 }
               >
@@ -89,7 +105,10 @@ const SettingsScreen = ({
               <button
                 className="arrow-btn"
                 onClick={() =>
-                  handleTimeChange("longBreakTime", settings.longBreakTime - 1)
+                  handleTimeChange(
+                    "longBreakTime",
+                    Math.max(0, settings.longBreakTime - TIME_STEP)
+                  )
                 }
               >
                 ‹
@@ -98,7 +117,35 @@ const SettingsScreen = ({
               <button
                 className="arrow-btn"
                 onClick={() =>
-                  handleTimeChange("longBreakTime", settings.longBreakTime + 1)
+                  handleTimeChange(
+                    "longBreakTime",
+                    settings.longBreakTime + TIME_STEP
+                  )
+                }
+              >
+                ›
+              </button>
+            </div>
+          </div>
+
+          <div className="settings-item">
+            <label className="item-label">Cycles Before Long Break</label>
+            <div className="item-controls">
+              <button
+                className="arrow-btn"
+                onClick={() =>
+                  handleCyclesChange(settings.cyclesBeforeLongBreak - 1)
+                }
+              >
+                ‹
+              </button>
+              <span className="item-value">
+                {settings.cyclesBeforeLongBreak}
+              </span>
+              <button
+                className="arrow-btn"
+                onClick={() =>
+                  handleCyclesChange(settings.cyclesBeforeLongBreak + 1)
                 }
               >
                 ›
@@ -115,10 +162,10 @@ const SettingsScreen = ({
             <div className="toggle-switch">
               <input
                 type="checkbox"
-                className="toggle-input"
                 checked={settings.soundEnabled}
                 onChange={() => toggleSetting("soundEnabled")}
                 id="sound-toggle"
+                className="toggle-input"
               />
               <label htmlFor="sound-toggle" className="toggle-label">
                 <span className="toggle-slider" />
@@ -155,5 +202,3 @@ const SettingsScreen = ({
     </div>
   );
 };
-
-export default SettingsScreen;

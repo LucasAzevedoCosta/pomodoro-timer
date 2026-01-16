@@ -1,49 +1,57 @@
-export interface PomodoroSettings {
-  focusDuration: number;
-  shortBreakDuration: number;
-  longBreakDuration: number;
-  cyclesBeforeLongBreak: number;
-}
-
-export const DEFAULT_SETTINGS: PomodoroSettings = {
-  focusDuration: 25,
-  shortBreakDuration: 5,
-  longBreakDuration: 15,
-  cyclesBeforeLongBreak: 4,
-};
-
-export interface Props {
-  settings: PomodoroSettings;
-  onSave: (settings: PomodoroSettings) => void;
-  onCancel: () => void;
-}
-export type TimerMode = "pomodoro" | "shortBreak" | "longBreak";
 export type Theme = "mountains" | "forest" | "neon" | "minimal";
 
-export const TIMER_DURATIONS: Record<TimerMode, number> = {
-  pomodoro: 25 * 60,
-  shortBreak: 5 * 60,
-  longBreak: 15 * 60,
+
+export type TimerMode = "pomodoro" | "shortBreak" | "longBreak";
+
+
+export type PomodoroSettings = {
+  // tempos (em minutos)
+  focusTime: number;
+  shortBreakTime: number;
+  longBreakTime: number;
+
+  // ciclos
+  cyclesBeforeLongBreak: number;
+  longBreakEnabled: boolean;
+
+  // efeitos
+  soundEnabled: boolean;
+  notificationsEnabled: boolean;
 };
+
+
+export const DEFAULT_SETTINGS: PomodoroSettings = {
+  focusTime: 25,
+  shortBreakTime: 5,
+  longBreakTime: 15,
+
+  cyclesBeforeLongBreak: 4,
+  longBreakEnabled: true,
+
+  soundEnabled: true,
+  notificationsEnabled: true,
+};
+
+export type TimerDurationsSettings = Pick<
+  PomodoroSettings,
+  "focusTime" | "shortBreakTime" | "longBreakTime"
+>;
+
+export type ToggleSettingKey = keyof Pick<
+  PomodoroSettings,
+  "soundEnabled" | "notificationsEnabled" | "longBreakEnabled"
+>;
+
+
+export const TIME_STEP = 5;
+
+export interface PomodoroTimerProps {
+  theme: Theme;
+  settings: PomodoroSettings;
+}
 
 export interface SettingsScreenProps {
   onBack: () => void;
-  settings: {
-    focusTime: number;
-    shortBreakTime: number;
-    longBreakTime: number;
-    soundEnabled: boolean;
-    notificationsEnabled: boolean;
-  };
-  onSettingsChange: (settings: any) => void;
-}
-export interface PomodoroTimerProps {
-  theme: Theme;
-  settings: {
-    focusTime: number;
-    shortBreakTime: number;
-    longBreakTime: number;
-    soundEnabled: boolean;
-    notificationsEnabled: boolean;
-  };
+  settings: PomodoroSettings;
+  onSettingsChange: (settings: PomodoroSettings) => void;
 }
