@@ -5,7 +5,7 @@ import { PomodoroTimer } from "./components/PomodoroTimer";
 import { SettingsScreen } from "./components/SettingsScreen";
 import { ThemeSelector } from "./components/ThemeSelector";
 
-import { PomodoroSettings, DEFAULT_SETTINGS } from "./types";
+import { PomodoroSettings, DEFAULT_SETTINGS } from "./types/types";
 import { useTheme } from "./hooks/useTheme";
 
 export function App() {

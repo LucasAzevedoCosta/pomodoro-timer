@@ -1,6 +1,6 @@
 import { ChevronLeft } from "lucide-react";
 import "./styles/SettingsScreen.css";
-import { SettingsScreenProps, TIME_STEP } from "../types";
+import { SettingsScreenProps, TIME_STEP } from "../types/types";
 import { useSettings } from "../hooks/useSettings";
 
 export const SettingsScreen = ({

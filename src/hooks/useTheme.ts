@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Theme } from "../types";
+import { Theme } from "../types/types";
 
 const AVAILABLE_THEMES: Theme[] = ["mountains", "forest", "neon", "minimal"];
 

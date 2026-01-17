@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain, Notification } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -14,6 +14,10 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 400,
+    fullscreen: false,
+    fullscreenable: false,
+    maximizable: false,
+    resizable: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname$1, "preload.mjs"),
@@ -43,6 +47,16 @@ app.on("activate", () => {
   }
 });
 app.whenReady().then(createWindow);
+ipcMain.handle(
+  "show-notification",
+  (_, { title, body }) => {
+    if (!Notification.isSupported()) return;
+    new Notification({
+      title,
+      body
+    }).show();
+  }
+);
 export {
   MAIN_DIST,
   RENDERER_DIST,

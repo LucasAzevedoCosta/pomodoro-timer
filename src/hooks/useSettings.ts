@@ -1,4 +1,4 @@
-import { SettingsScreenProps, TIME_STEP, ToggleSettingKey } from "../types";
+import { SettingsScreenProps, TIME_STEP, ToggleSettingKey } from "../types/types";
 
 type UseSettingsParams = Pick<
   SettingsScreenProps,

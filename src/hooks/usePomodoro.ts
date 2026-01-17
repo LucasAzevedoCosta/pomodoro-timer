@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { PomodoroSettings, TimerMode } from "../types";
+import { PomodoroSettings, TimerMode } from "../types/types";
 
 const getTimerDurations = (
   settings: PomodoroSettings
@@ -42,6 +42,17 @@ export function usePomodoro(settings: PomodoroSettings) {
     oscillator.stop(audioContext.currentTime + 0.5);
   }, [settings.soundEnabled]);
 
+  const showNotification = useCallback(
+    (title: string, body: string) => {
+      if (!settings.notificationsEnabled) return;
+
+      if (window.electron?.notify) {
+        window.electron.notify(title, body);
+      }
+    },
+    [settings.notificationsEnabled]
+  );
+
   const handleTimerComplete = useCallback(() => {
     setIsRunning(false);
 
@@ -55,20 +66,41 @@ export function usePomodoro(settings: PomodoroSettings) {
       if (settings.longBreakEnabled && isLastCycle) {
         setMode("longBreak");
         setTimeLeft(TIMER_DURATIONS.longBreak);
+
+        showNotification(
+          "Tempo de foco finalizado",
+          "Hora de fazer uma pausa longa ☕"
+        );
       } else if (!settings.longBreakEnabled && isLastCycle) {
         setMode("pomodoro");
         setTimeLeft(TIMER_DURATIONS.pomodoro);
+
+        showNotification("Ciclo finalizado", "Hora de voltar ao foco 🚀");
       } else {
         setMode("shortBreak");
         setTimeLeft(TIMER_DURATIONS.shortBreak);
+
+        showNotification(
+          "Tempo de foco finalizado",
+          "Hora de fazer uma pausa curta 🌱"
+        );
       }
     } else {
       setMode("pomodoro");
       setTimeLeft(TIMER_DURATIONS.pomodoro);
+
+      showNotification("Pausa finalizada", "Hora de focar novamente 🎯");
     }
 
     playSound();
-  }, [mode, completedPomodoros, settings, TIMER_DURATIONS, playSound]);
+  }, [
+    mode,
+    completedPomodoros,
+    settings,
+    TIMER_DURATIONS,
+    playSound,
+    showNotification,
+  ]);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -111,7 +143,9 @@ export function usePomodoro(settings: PomodoroSettings) {
   };
 
   const progress =
-    ((TIMER_DURATIONS[mode] - timeLeft) / TIMER_DURATIONS[mode]) * 100;
+    TIMER_DURATIONS[mode] > 0
+      ? ((TIMER_DURATIONS[mode] - timeLeft) / TIMER_DURATIONS[mode]) * 100
+      : 0;
 
   return {
     mode,

@@ -1,4 +1,4 @@
-import { Theme } from "../types";
+import { Theme } from "../types/types";
 
 interface ThemeSelectorProps {
   theme: Theme;

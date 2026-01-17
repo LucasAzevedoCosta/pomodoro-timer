@@ -1,6 +1,6 @@
 import "./styles/clock.css";
 import { Play, Pause, RotateCcw } from "lucide-react";
-import { PomodoroTimerProps } from "../types";
+import { PomodoroTimerProps } from "../types/types";
 import { usePomodoro } from "../hooks/usePomodoro";
 
 export const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
