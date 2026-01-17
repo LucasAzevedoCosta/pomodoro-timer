@@ -18,8 +18,8 @@ export function useSettings({ settings, onSettingsChange }: UseSettingsParams) {
     value: number
   ) => {
     // Descomentar para testes referenetes a os ciclo do timer para conseguiu um tempo de 6 segundo no timer
-    // const clampedValue = Math.max(0.1, Math.min(60, value));
-    const clampedValue = Math.max(5, Math.min(60, value));
+     const clampedValue = Math.max(0.1, Math.min(60, value));
+//    const clampedValue = Math.max(5, Math.min(60, value));
 
     updateSettings({ [key]: clampedValue });
   };

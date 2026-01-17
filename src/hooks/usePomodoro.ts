@@ -49,17 +49,19 @@ export function usePomodoro(settings: PomodoroSettings) {
       const nextPomodoroCount = completedPomodoros + 1;
       setCompletedPomodoros(nextPomodoroCount);
 
-      let nextMode: TimerMode = "shortBreak";
+      const isLastCycle =
+        nextPomodoroCount % settings.cyclesBeforeLongBreak === 0;
 
-      if (
-        settings.longBreakEnabled &&
-        nextPomodoroCount % settings.cyclesBeforeLongBreak === 0
-      ) {
-        nextMode = "longBreak";
+      if (settings.longBreakEnabled && isLastCycle) {
+        setMode("longBreak");
+        setTimeLeft(TIMER_DURATIONS.longBreak);
+      } else if (!settings.longBreakEnabled && isLastCycle) {
+        setMode("pomodoro");
+        setTimeLeft(TIMER_DURATIONS.pomodoro);
+      } else {
+        setMode("shortBreak");
+        setTimeLeft(TIMER_DURATIONS.shortBreak);
       }
-
-      setMode(nextMode);
-      setTimeLeft(TIMER_DURATIONS[nextMode]);
     } else {
       setMode("pomodoro");
       setTimeLeft(TIMER_DURATIONS.pomodoro);
@@ -69,20 +71,31 @@ export function usePomodoro(settings: PomodoroSettings) {
   }, [mode, completedPomodoros, settings, TIMER_DURATIONS, playSound]);
 
   useEffect(() => {
-    if (isRunning && timeLeft > 0) {
-      intervalRef.current = window.setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      handleTimerComplete();
-    }
+    if (!isRunning) return;
+
+    intervalRef.current = window.setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
+
+          handleTimerComplete();
+          return 0;
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
 
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
-  }, [isRunning, timeLeft, handleTimerComplete]);
+  }, [isRunning, handleTimerComplete]);
 
   const toggleTimer = () => setIsRunning((prev) => !prev);
 
