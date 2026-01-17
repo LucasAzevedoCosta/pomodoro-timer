@@ -19,8 +19,8 @@ function createWindow() {
       preload: path.join(__dirname$1, "preload.mjs"),
       nodeIntegration: true
     },
-    autoHideMenuBar: true,
-    frame: false
+    autoHideMenuBar: true
+    //    frame: false
   });
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());

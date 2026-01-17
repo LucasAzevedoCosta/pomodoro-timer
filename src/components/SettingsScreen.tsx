@@ -1,60 +1,19 @@
 import { ChevronLeft } from "lucide-react";
 import "./styles/SettingsScreen.css";
-import { SettingsScreenProps, TIME_STEP, ToggleSettingKey } from "../types";
+import { SettingsScreenProps, TIME_STEP } from "../types";
+import { useSettings } from "../hooks/useSettings";
 
 export const SettingsScreen = ({
   onBack,
   settings,
   onSettingsChange,
 }: SettingsScreenProps) => {
-  const handleTimeChange = (
-    key: "focusTime" | "shortBreakTime" | "longBreakTime",
-    value: number
-  ) => {
-// Descomentar para testes no timer
-//  const clampedValue = Math.max(0.1, Math.min(60, value));
-    const clampedValue = Math.max(5, Math.min(60, value));
-    onSettingsChange({
-      ...settings,
-      [key]: clampedValue,
-    });
-  };
-  const handleLongBreakChange = (increase: boolean) => {
-    if (increase) {
-      onSettingsChange({
-        ...settings,
-        longBreakTime: settings.longBreakTime + TIME_STEP,
-        longBreakEnabled: true,
-      });
-    } else {
-      if (settings.longBreakTime <= 5) {
-        onSettingsChange({
-          ...settings,
-          longBreakEnabled: false,
-        });
-      } else {
-        onSettingsChange({
-          ...settings,
-          longBreakTime: Math.max(5, settings.longBreakTime - TIME_STEP),
-        });
-      }
-    }
-  };
-
-  const toggleSetting = (key: ToggleSettingKey | "longBreakEnabled") => {
-    onSettingsChange({
-      ...settings,
-      [key]: !settings[key],
-    });
-  };
-
-  const handleCyclesChange = (value: number) => {
-    const clampedValue = Math.max(1, Math.min(10, value));
-    onSettingsChange({
-      ...settings,
-      cyclesBeforeLongBreak: clampedValue,
-    });
-  };
+  const {
+    handleTimeChange,
+    handleLongBreakChange,
+    toggleSetting,
+    handleCyclesChange,
+  } = useSettings({ settings, onSettingsChange });
 
   return (
     <div className="settings-screen">
@@ -198,10 +157,10 @@ export const SettingsScreen = ({
             <div className="toggle-switch">
               <input
                 type="checkbox"
-                className="toggle-input"
                 checked={settings.notificationsEnabled}
                 onChange={() => toggleSetting("notificationsEnabled")}
                 id="notif-toggle"
+                className="toggle-input"
               />
               <label htmlFor="notif-toggle" className="toggle-label">
                 <span className="toggle-slider" />

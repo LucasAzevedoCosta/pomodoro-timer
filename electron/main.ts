@@ -36,7 +36,7 @@ function createWindow() {
       nodeIntegration: true,
     },
     autoHideMenuBar: true,
-    frame: false
+//    frame: false
   })
 
   // Test active push message to Renderer-process.

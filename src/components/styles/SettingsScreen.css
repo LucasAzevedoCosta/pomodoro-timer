@@ -247,36 +247,39 @@
   transform: translateY(0);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 820px), (max-height: 420px) {
   .settings-header {
-    padding: 16px 20px;
+    padding: 12px 16px;
   }
 
   .settings-title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .settings-content {
-    padding: 16px;
-    gap: 16px;
+    padding: 12px;
+    gap: 12px;
   }
 
   .settings-item {
-    padding: 12px 16px;
-    font-size: 14px;
+    padding: 10px 12px;
   }
 
   .item-label {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .item-value {
-    font-size: 16px;
+    font-size: 14px;
+    min-width: 60px;
   }
 
-  .arrow-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
+  .settings-actions {
+    padding-bottom: 12px;
+  }
+
+  .action-btn {
+    padding: 12px;
+    font-size: 14px;
   }
 }

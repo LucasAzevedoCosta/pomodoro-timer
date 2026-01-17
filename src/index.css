@@ -27,12 +27,12 @@ body,
   height: 100%;
 }
 
-body{
+body {
   -webkit-app-region: drag;
 }
 
 button,
-input{
+input {
   -webkit-app-region: no-drag;
 }
 
@@ -81,13 +81,9 @@ input{
     font-size: 12px;
     padding: 6px 12px;
   }
-}
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  padding: 20px;
+  .app-container {
+    min-height: 100%;
+    padding: 10px;
+    justify-content: center;
+  }
 }
