@@ -1,7 +1,1 @@
-"use strict";
-const electron = require("electron");
-electron.contextBridge.exposeInMainWorld("electron", {
-  notify: (title, body) => {
-    electron.ipcRenderer.send("show-notification", { title, body });
-  }
-});
+"use strict";const e=require("electron");e.contextBridge.exposeInMainWorld("electron",{notify:(n,o)=>{e.ipcRenderer.send("show-notification",{title:n,body:o})}});
