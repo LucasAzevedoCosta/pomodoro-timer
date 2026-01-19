@@ -74,23 +74,23 @@
 }
 
 .theme-dark-academia .progress-ring-bg {
-  stroke: rgba(139, 116, 83, 0.2); /* Tom de bronze antigo */
+  stroke: rgba(139, 116, 83, 0.2);
 }
 
 .theme-dark-academia .progress-ring-fill {
-  stroke: #b38b6d; /* Dourado/Bronze suave */
+  stroke: #b38b6d;
   filter: drop-shadow(0 0 5px rgba(179, 139, 109, 0.6));
 }
 
 .theme-dark-academia .timer-text {
-  font-family: "Times New Roman", serif; /* Fonte clássica */
-  color: #f0e6d6; /* Cor de papel envelhecido */
+  font-family: "Times New Roman", serif;
+  color: #f0e6d6;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .theme-dark-academia .timer-label {
   font-family: "Georgia", serif;
-  color: #b38b6d; /* Bronze/Dourado */
+  color: #b38b6d;
   letter-spacing: 2px;
   text-transform: uppercase;
   font-size: 13px;
@@ -101,9 +101,9 @@
 }
 
 .theme-dark-academia .control-btn {
-  background: #3a322c; /* Marrom escuro */
-  color: #f0e6d6; /* Papel envelhecido */
-  border: 1px solid #b38b6d; /* Borda dourada */
+  background: #3a322c;
+  color: #f0e6d6;
+  border: 1px solid #b38b6d;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
@@ -111,21 +111,21 @@
   background: #4a403a;
   color: #fff;
   border-color: #e0b38b;
-  transform: scale(1.1) rotate(-2deg); /* Um leve giro para a brincadeira */
+  transform: scale(1.1) rotate(-2deg);
 }
 
 .theme-dark-academia .bubble {
-  border: 2px solid #b38b6d; /* Bolhas com borda dourada */
+  border: 2px solid #b38b6d;
 }
 
 .theme-dark-academia .bubble.completed {
-  background-color: #6d4c41; /* Marrom escuro avermelhado */
+  background-color: #6d4c41;
   border-color: #6d4c41;
   box-shadow: 0 0 8px rgba(109, 76, 65, 0.7);
 }
 
 .theme-dark-academia .checkmark {
-  color: #f0e6d6; /* Cor do texto de papel envelhecido */
+  color: #f0e6d6;
 }
 
 .theme-dark-academia .pulse-effect {
@@ -175,7 +175,7 @@
 
 /* ================= THEME: MIDNIGHT BLUE ================= */
 .theme-midnight .timer-card {
-  background: #0f172a; /* Azul escuro sólido */
+  background: #0f172a;
   border: 1px solid #1e293b;
 }
 
@@ -190,7 +190,7 @@
 .theme-midnight .timer-text {
   font-family: "Segoe UI", sans-serif;
   color: #f8fafc;
-  font-weight: 300; /* Texto mais fino e elegante */
+  font-weight: 300;
 }
 
 .theme-midnight .timer-label {
@@ -198,7 +198,7 @@
 }
 
 .theme-midnight .progress-ring-fill {
-  stroke: #38bdf8; /* Azul neon suave para destaque */
+  stroke: #38bdf8;
 }
 
 .theme-midnight .control-btn {

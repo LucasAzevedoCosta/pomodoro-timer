@@ -1,5 +1,5 @@
 import "./styles/clock.css";
-import { Play, Pause, RotateCcw } from "lucide-react";
+import { Play, Pause, RotateCcw, SkipForward } from "lucide-react";
 import { PomodoroTimerProps } from "../types/types";
 import { usePomodoro } from "../hooks/usePomodoro";
 
@@ -13,6 +13,7 @@ export const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
     formatTime,
     toggleTimer,
     resetTimer,
+    skipTimer,
   } = usePomodoro(settings);
 
   return (
@@ -51,6 +52,12 @@ export const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
             {isRunning ? <Pause size={32} /> : <Play size={32} />}
           </button>
 
+          {mode !== "pomodoro" && (
+            <button className="control-btn reset-btn" onClick={skipTimer}>
+              <SkipForward size={24} />
+            </button>
+          )}
+
           <div className="pomodoro-bubbles">
             {Array.from({ length: settings.cyclesBeforeLongBreak }).map(
               (_, index) => {
@@ -69,12 +76,7 @@ export const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
             )}
           </div>
         </div>
-
-        {theme === "mountains" && <div className="mountain-overlay" />}
-        {theme === "forest" && <div className="forest-overlay" />}
       </div>
-
-      {isRunning && <div className="pulse-effect" />}
     </div>
   );
 };

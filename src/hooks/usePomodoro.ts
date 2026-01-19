@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { PomodoroSettings, TimerMode } from "../types/types";
 
 const getTimerDurations = (
-  settings: PomodoroSettings
+  settings: PomodoroSettings,
 ): Record<TimerMode, number> => ({
   pomodoro: settings.focusTime * 60,
   shortBreak: settings.shortBreakTime * 60,
@@ -35,7 +35,7 @@ export function usePomodoro(settings: PomodoroSettings) {
     gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(
       0.01,
-      audioContext.currentTime + 0.5
+      audioContext.currentTime + 0.5,
     );
 
     oscillator.start();
@@ -50,7 +50,7 @@ export function usePomodoro(settings: PomodoroSettings) {
         window.electron.notify(title, body);
       }
     },
-    [settings.notificationsEnabled]
+    [settings.notificationsEnabled],
   );
 
   const handleTimerComplete = useCallback(() => {
@@ -69,7 +69,7 @@ export function usePomodoro(settings: PomodoroSettings) {
 
         showNotification(
           "Tempo de foco finalizado",
-          "Hora de fazer uma pausa longa ☕"
+          "Hora de fazer uma pausa longa ☕",
         );
       } else if (!settings.longBreakEnabled && isLastCycle) {
         setMode("pomodoro");
@@ -82,7 +82,7 @@ export function usePomodoro(settings: PomodoroSettings) {
 
         showNotification(
           "Tempo de foco finalizado",
-          "Hora de fazer uma pausa curta 🌱"
+          "Hora de fazer uma pausa curta 🌱",
         );
       }
     } else {
@@ -147,6 +147,23 @@ export function usePomodoro(settings: PomodoroSettings) {
       ? ((TIMER_DURATIONS[mode] - timeLeft) / TIMER_DURATIONS[mode]) * 100
       : 0;
 
+  const skipTimer = () => {
+    if (mode === "pomodoro") return;
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    setIsRunning(false);
+
+    setMode("pomodoro");
+    setTimeLeft(TIMER_DURATIONS.pomodoro);
+
+    showNotification("Pausa pulada", "Hora de focar novamente 🎯");
+    playSound();
+  };
+
   return {
     mode,
     timeLeft,
@@ -156,6 +173,7 @@ export function usePomodoro(settings: PomodoroSettings) {
     formatTime,
     toggleTimer,
     resetTimer,
+    skipTimer,
     settings,
   };
 }
