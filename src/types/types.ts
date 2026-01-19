@@ -1,4 +1,4 @@
-export type Theme = "mountains" | "forest" ;
+export type Theme =  "cyberpunk" | "dark-academia" | "midnight" | "emerald";
 
 
 export type TimerMode = "pomodoro" | "shortBreak" | "longBreak";

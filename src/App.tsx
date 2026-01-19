@@ -11,7 +11,7 @@ import { useTheme } from "./hooks/useTheme";
 export function App() {
   const [showSettings, setShowSettings] = useState(false);
 
-  const { theme, themes, changeTheme } = useTheme("mountains");
+  const { theme, themes, changeTheme } = useTheme("dark-academia");
 
   const [settings, setSettings] = useState<
     PomodoroSettings & { longBreakEnabled: boolean }

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Theme } from "../types/types";
 
-const AVAILABLE_THEMES: Theme[] = ["mountains", "forest"];
+const AVAILABLE_THEMES: Theme[] = [ "dark-academia", "cyberpunk",  "midnight", "emerald"];
 
-export function useTheme(initialTheme: Theme = "mountains") {
+export function useTheme(initialTheme: Theme = "dark-academia") {
   const [theme, setTheme] = useState<Theme>(initialTheme);
 
   const changeTheme = (newTheme: Theme) => {

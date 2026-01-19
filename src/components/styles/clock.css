@@ -20,28 +20,205 @@
   transition: all 0.5s ease;
 }
 
-/* ================= THEMES ================= */
+/* ================= THEME: CYBERPUNK ================= */
 
-.theme-mountains .timer-card {
-  background: linear-gradient(
-      135deg,
-      rgba(44, 62, 80, 0.95) 0%,
-      rgba(52, 152, 219, 0.95) 100%
-    ),
-    url("https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg?auto=compress&cs=tinysrgb&w=1200")
-      center/cover;
+.theme-cyberpunk .timer-card {
+  border: none;
+  background: #050505;
+  background-image: linear-gradient(
+    rgba(0, 255, 242, 0.03) 1px,
+    transparent 1px
+  );
+  background-size: 100% 4px;
+  animation: scanlineMove 10s linear infinite;
 }
 
-.theme-forest .timer-card {
-  background: linear-gradient(
-      135deg,
-      rgba(20, 30, 40, 0.95) 0%,
-      rgba(15, 76, 117, 0.95) 100%
-    ),
-    url("https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1200")
-      center/cover;
+.theme-cyberpunk .timer-text {
+  color: #00fff2;
+  text-shadow: 0 0 10px #00fff2;
+  font-family: "Orbitron", sans-serif;
 }
 
+.theme-cyberpunk .progress-ring-fill {
+  stroke: #ff0055;
+  filter: drop-shadow(0 0 5px #ff0055);
+}
+
+.theme-cyberpunk .control-btn {
+  background: rgba(0, 255, 242, 0.1);
+  border: 1px solid #00fff2;
+  color: #00fff2;
+}
+
+@keyframes scanlineMove {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 100px;
+  }
+}
+/* ================= THEME: DARK ACADEMIA ================= */
+.theme-dark-academia .timer-card {
+  background: radial-gradient(circle at center, #3d2b1f 0%, #1a1410 100%);
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.7);
+}
+
+.theme-dark-academia .timer-display {
+  background: rgba(40, 35, 30, 0.8);
+  border: 1px solid rgba(139, 116, 83, 0.3);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 10px rgba(0, 0, 0, 0.5),
+    0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.theme-dark-academia .progress-ring-bg {
+  stroke: rgba(139, 116, 83, 0.2); /* Tom de bronze antigo */
+}
+
+.theme-dark-academia .progress-ring-fill {
+  stroke: #b38b6d; /* Dourado/Bronze suave */
+  filter: drop-shadow(0 0 5px rgba(179, 139, 109, 0.6));
+}
+
+.theme-dark-academia .timer-text {
+  font-family: "Times New Roman", serif; /* Fonte clássica */
+  color: #f0e6d6; /* Cor de papel envelhecido */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.theme-dark-academia .timer-label {
+  font-family: "Georgia", serif;
+  color: #b38b6d; /* Bronze/Dourado */
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.theme-dark-academia .timer-controls {
+  gap: 20px;
+}
+
+.theme-dark-academia .control-btn {
+  background: #3a322c; /* Marrom escuro */
+  color: #f0e6d6; /* Papel envelhecido */
+  border: 1px solid #b38b6d; /* Borda dourada */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.theme-dark-academia .control-btn:hover {
+  background: #4a403a;
+  color: #fff;
+  border-color: #e0b38b;
+  transform: scale(1.1) rotate(-2deg); /* Um leve giro para a brincadeira */
+}
+
+.theme-dark-academia .bubble {
+  border: 2px solid #b38b6d; /* Bolhas com borda dourada */
+}
+
+.theme-dark-academia .bubble.completed {
+  background-color: #6d4c41; /* Marrom escuro avermelhado */
+  border-color: #6d4c41;
+  box-shadow: 0 0 8px rgba(109, 76, 65, 0.7);
+}
+
+.theme-dark-academia .checkmark {
+  color: #f0e6d6; /* Cor do texto de papel envelhecido */
+}
+
+.theme-dark-academia .pulse-effect {
+  background: radial-gradient(
+    circle,
+    rgba(179, 139, 109, 0.3) 0%,
+    transparent 70%
+  );
+}
+
+/* ================= THEME: DEEP EMERALD ================= */
+.theme-emerald .timer-card {
+  background: radial-gradient(circle at center, #062e24 0%, #021a14 100%);
+  border: 1px solid #0a4d3c;
+}
+
+.theme-emerald .timer-display {
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid #c5a059;
+  border-radius: 20px;
+}
+
+.theme-emerald .timer-text {
+  font-family: "Garamond", serif;
+  color: #f1e4c3;
+  text-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+}
+
+.theme-emerald .timer-label {
+  color: #c5a059;
+}
+
+.theme-emerald .progress-ring-fill {
+  stroke: #c5a059;
+}
+
+.theme-emerald .control-btn {
+  background: #0a4d3c;
+  color: #f1e4c3;
+  border-bottom: 3px solid #04241c;
+}
+
+.theme-emerald .bubble.completed {
+  background-color: #c5a059;
+  border-color: #c5a059;
+}
+
+/* ================= THEME: MIDNIGHT BLUE ================= */
+.theme-midnight .timer-card {
+  background: #0f172a; /* Azul escuro sólido */
+  border: 1px solid #1e293b;
+}
+
+.theme-midnight .timer-display {
+  background: #1e293b;
+  box-shadow:
+    10px 10px 20px #0a0f1d,
+    -10px -10px 20px #141d37;
+  border-radius: 50%;
+}
+
+.theme-midnight .timer-text {
+  font-family: "Segoe UI", sans-serif;
+  color: #f8fafc;
+  font-weight: 300; /* Texto mais fino e elegante */
+}
+
+.theme-midnight .timer-label {
+  color: #94a3b8;
+}
+
+.theme-midnight .progress-ring-fill {
+  stroke: #38bdf8; /* Azul neon suave para destaque */
+}
+
+.theme-midnight .control-btn {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #f8fafc;
+}
+
+.theme-midnight .bubble.completed {
+  background-color: #38bdf8;
+  border-color: #38bdf8;
+}
+
+.theme-midnight .pulse-effect {
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.1) 0%,
+    transparent 70%
+  );
+}
 
 /* ================= TIMER ================= */
 
@@ -72,9 +249,8 @@
   stroke-dasharray: 880;
   stroke-dashoffset: 880;
   transition: stroke-dashoffset 1s linear;
-  filter: drop-shadow(0 0 10px currentColor);
+  filter: none;
 }
-
 
 /* ================= TIMER TEXT ================= */
 
@@ -168,29 +344,5 @@
 /* ================= EFFECTS ================= */
 
 .pulse-effect {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.2) 0%,
-    transparent 70%
-  );
-  animation: pulse 2s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.1);
-  }
+  display: none;
 }
