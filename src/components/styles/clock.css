@@ -42,24 +42,7 @@
       center/cover;
 }
 
-.theme-neon .timer-card {
-  background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
-  animation: neonPulse 4s ease-in-out infinite;
-}
 
-.theme-minimal .timer-card {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-}
-
-@keyframes neonPulse {
-  0%,
-  100% {
-    filter: brightness(1);
-  }
-  50% {
-    filter: brightness(1.1);
-  }
-}
 /* ================= TIMER ================= */
 
 .timer-display {
@@ -92,11 +75,6 @@
   filter: drop-shadow(0 0 10px currentColor);
 }
 
-.theme-neon .progress-ring-fill {
-  stroke: #ff00ff;
-  filter: drop-shadow(0 0 20px #ff00ff) drop-shadow(0 0 40px #ff00ff);
-  animation: neonGlow 2s ease-in-out infinite;
-}
 
 /* ================= TIMER TEXT ================= */
 

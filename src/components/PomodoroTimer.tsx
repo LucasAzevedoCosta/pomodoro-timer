@@ -36,8 +36,8 @@ export const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
               {mode === "pomodoro"
                 ? "Focus Time"
                 : mode === "shortBreak"
-                ? "Short Break"
-                : "Long Break"}
+                  ? "Short Break"
+                  : "Long Break"}
             </div>
           </div>
         </div>
@@ -65,14 +65,13 @@ export const PomodoroTimer = ({ theme, settings }: PomodoroTimerProps) => {
                     {isCompleted && <span className="checkmark">✓</span>}
                   </div>
                 );
-              }
+              },
             )}
           </div>
         </div>
 
         {theme === "mountains" && <div className="mountain-overlay" />}
         {theme === "forest" && <div className="forest-overlay" />}
-        {theme === "neon" && <div className="neon-particles" />}
       </div>
 
       {isRunning && <div className="pulse-effect" />}

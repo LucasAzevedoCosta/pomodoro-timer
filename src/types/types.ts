@@ -1,4 +1,4 @@
-export type Theme = "mountains" | "forest" | "neon" | "minimal";
+export type Theme = "mountains" | "forest" ;
 
 
 export type TimerMode = "pomodoro" | "shortBreak" | "longBreak";
