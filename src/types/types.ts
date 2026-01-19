@@ -1,8 +1,6 @@
-export type Theme =  "cyberpunk" | "dark-academia" | "midnight" | "emerald";
-
+export type Theme = "cyberpunk" | "dark-academia" | "midnight" | "emerald";
 
 export type TimerMode = "pomodoro" | "shortBreak" | "longBreak";
-
 
 export type PomodoroSettings = {
   // tempos (em minutos)
@@ -18,7 +16,6 @@ export type PomodoroSettings = {
   soundEnabled: boolean;
   notificationsEnabled: boolean;
 };
-
 
 export const DEFAULT_SETTINGS: PomodoroSettings = {
   focusTime: 25,
@@ -42,7 +39,6 @@ export type ToggleSettingKey = keyof Pick<
   "soundEnabled" | "notificationsEnabled" | "longBreakEnabled"
 >;
 
-
 export const TIME_STEP = 5;
 
 export interface PomodoroTimerProps {
@@ -54,4 +50,16 @@ export interface SettingsScreenProps {
   onBack: () => void;
   settings: PomodoroSettings;
   onSettingsChange: (settings: PomodoroSettings) => void;
+}
+
+export type NotificationKey =
+  | "SHORT_BREAK_STARTED"
+  | "LONG_BREAK_STARTED"
+  | "BREAK_FINISHED"
+  | "BREAK_SKIPPED"
+  | "CYCLE_FINISHED";
+
+export interface NotificationMessage {
+  title: string;
+  body: string;
 }

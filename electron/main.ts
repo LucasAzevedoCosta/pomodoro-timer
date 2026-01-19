@@ -39,7 +39,8 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
-      nodeIntegration: true,
+      contextIsolation: true,
+      nodeIntegration: false,
     },
     autoHideMenuBar: true,
     //    frame: false
@@ -78,7 +79,7 @@ app.on("activate", () => {
 
 app.whenReady().then(createWindow);
 
-ipcMain.handle(
+ipcMain.on(
   "show-notification",
   (_, { title, body }: { title: string; body: string }) => {
     if (!Notification.isSupported()) return;
@@ -87,5 +88,5 @@ ipcMain.handle(
       title,
       body,
     }).show();
-  }
+  },
 );
