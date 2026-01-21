@@ -22,7 +22,7 @@ export const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 export const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
 
 const RENDERER_DIST = path.join(__dirname, "renderer");
-const PRELOAD_FILE = path.join(__dirname, "preload", "preload.js");
+const PRELOAD_FILE = path.join(__dirname, "preload.mjs");
 
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
   ? path.join(process.env.APP_ROOT, "public")
