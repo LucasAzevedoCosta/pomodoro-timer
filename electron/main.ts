@@ -36,6 +36,7 @@ function createWindow() {
     height: 400,
     resizable: false,
     autoHideMenuBar: true,
+    useContentSize: true,
     webPreferences: {
       preload: PRELOAD_FILE,
       contextIsolation: true,
