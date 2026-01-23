@@ -37,6 +37,7 @@ function createWindow() {
     resizable: false,
     autoHideMenuBar: true,
     useContentSize: true,
+    icon: path.join(process.env.VITE_PUBLIC!, "icon.png"),
     webPreferences: {
       preload: PRELOAD_FILE,
       contextIsolation: true,

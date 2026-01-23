@@ -4,6 +4,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "author": "Your Name",
   "description": "Um timer Pomodoro para produtividade",
   "productDescription": "Aplicativo Pomodoro que ajuda a organizar seus períodos de foco e descanso.",
   "scripts": {
